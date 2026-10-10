@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -75,6 +74,11 @@
         .nav-name:hover,
         .nav-link:hover {
             opacity: 0.5;
+        }
+
+        /* Hide toggle button on desktop layout */
+        .nav-toggle {
+            display: none;
         }
 
         /* HEADER */
@@ -418,33 +422,56 @@
                 width: 100%;
                 padding: 1rem;
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr auto; /* Title on left, Button on right */
                 column-gap: 1rem;
                 row-gap: 1.25rem;
-                align-items: start;
+                align-items: center; /* Centered with hamburger */
             }
 
             .nav-name {
-                grid-column: 1 / -1;
+                grid-column: 1;
                 font-size: 13px;
             }
 
-            .nav-link {
-                font-size: 11px;
+            .nav-toggle {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                background: none;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+                justify-self: end;
             }
 
-            .site-nav .nav-link:nth-child(2) {
-                grid-column: 1;
+            .nav-toggle span {
+                width: 24px;
+                height: 2px;
+                background-color: #ffffff;
+                transition: transform 0.3s ease, opacity 0.3s ease;
             }
 
-            .site-nav .nav-link:nth-child(3) {
-                grid-column: 2;
-                text-align: right;
-            }
-
-            .site-nav .nav-link:nth-child(4) {
-                grid-column: 1 / -1;
+            .nav-link.nav-item {
+                display: none; /* Hide links by default */
+                grid-column: 1 / -1; /* Span full width when open */
                 text-align: left;
+                font-size: 13px;
+                padding: 0.25rem 0;
+            }
+
+            /* Show links and animate hamburger when active */
+            .site-nav.active .nav-link.nav-item {
+                display: block;
+            }
+
+            .site-nav.active .nav-toggle span:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+            .site-nav.active .nav-toggle span:nth-child(2) {
+                opacity: 0;
+            }
+            .site-nav.active .nav-toggle span:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
             }
 
             /* HEADER */
@@ -508,7 +535,7 @@
             }
 
             .portfolio-grid {
-                column-count: 2;
+                column-count: 1; /* Changed to 1 thumbnail per row on mobile */
                 column-gap: var(--gallery-gutter);
             }
 
@@ -677,11 +704,17 @@
 
     <a href="index.html" class="nav-name">DEVON BA DOUR</a>
 
-    <a href="index.html" class="nav-link">WORK</a>
+    <button class="nav-toggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-    <a href="resume.html" class="nav-link">RESUME</a>
+    <a href="index.html" class="nav-link nav-item">WORK</a>
 
-    <a href="reach-out.html" class="nav-link">REACH OUT!</a>
+    <a href="resume.html" class="nav-link nav-item">RESUME</a>
+
+    <a href="reach-out.html" class="nav-link nav-item">REACH OUT!</a>
 
 </nav>
 
@@ -763,24 +796,6 @@
             </div>
 
         </a>
-
-<!--        <a class="project" href="target.html">-->
-
-<!--            <div class="project-media">-->
-<!--                <img src="images/target1.png" alt="Target 2026 Ad Illustrations">-->
-<!--            </div>-->
-
-<!--            <div class="project-info">-->
-<!--                <span class="project-title">-->
-<!--                    TARGET 2026 AD ILLUSTRATIONS-->
-<!--                </span>-->
-
-<!--                <span class="project-type">-->
-<!--                    ILLUSTRATION-->
-<!--                </span>-->
-<!--            </div>-->
-
-<!--        </a>-->
 
         <a class="project" href="genero.html">
 
@@ -882,24 +897,6 @@
 
         </a>
 
-<!--        <a class="project" href="remedi.html">-->
-
-<!--            <div class="project-media">-->
-<!--                <img src="images/remedi1.jpg" alt="Remedi">-->
-<!--            </div>-->
-
-<!--            <div class="project-info">-->
-<!--                <span class="project-title">-->
-<!--                    REMEDI-->
-<!--                </span>-->
-
-<!--                <span class="project-type">-->
-<!--                    PACKAGING DESIGN-->
-<!--                </span>-->
-<!--            </div>-->
-
-<!--        </a>-->
-
     </div>
 
 </main>
@@ -929,6 +926,17 @@
     </div>
 
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const siteNav = document.querySelector('.site-nav');
+        const navToggle = document.querySelector('.nav-toggle');
+
+        navToggle.addEventListener('click', () => {
+            siteNav.classList.toggle('active');
+        });
+    });
+</script>
 
 </body>
 
