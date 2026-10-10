@@ -78,7 +78,7 @@
         }
 
         .project-title {
-            margin: 0 0 8rem 0;
+            margin: 0 0 5rem 0;
             font-size: clamp(1.5rem, 2.5vw, 2.5rem);
             font-weight: 500;
             line-height: 0.95;
@@ -104,11 +104,11 @@
         .text-heading,
         .gallery-text-heading {
             margin: 0;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 300;
             line-height: 1.1;
             text-transform: uppercase;
-            letter-spacing: 0.02em;
+            font-family: Degular, Arial, sans-serif;
         }
 
         .text-body,
@@ -125,6 +125,8 @@
             width: 100%;
             padding: 0 var(--page-padding) 5rem var(--page-padding);
         }
+
+
 
         .gallery-row {
             width: 100%;
@@ -215,6 +217,13 @@
             user-select: none;
         }
 
+        .project-subheading {
+            font-family: Degular, Arial, sans-serif;
+            font-weight: 300;
+            font-size: clamp(0.5rem, 1vw, 1rem);
+            margin: 0 0 5rem 0;
+        }
+
         .lightbox-close:hover {
             opacity: 0.5;
         }
@@ -291,8 +300,9 @@
             }
 
             .project-title {
-                margin-bottom: 5rem;
+                margin-bottom: 2.5rem;
                 font-size: 1.75rem;
+                font-family: Degular, Arial, sans-serif;
             }
 
             .project-text,
@@ -368,6 +378,7 @@
             }
         }
 
+
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -407,6 +418,13 @@
     <h1 class="project-title">
         MNDOT
     </h1>
+
+    <section class="project-subheading">
+
+        <h3 class="project-subheading">
+            PRODUCT/GAME DESIGN
+        </h3>
+    </section>
 
     <section class="project-text">
 
@@ -771,4 +789,3 @@
 </body>
 
 </html>
-```
