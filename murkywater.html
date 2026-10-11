@@ -13,7 +13,6 @@
 
     <title>Murky Water — Devon Ba Dour</title>
 
-
     <style>
 
         /* =========================================================
@@ -24,602 +23,324 @@
             box-sizing: border-box;
         }
 
-
         html {
             margin: 0;
             padding: 0;
             scroll-behavior: smooth;
         }
 
-
         body {
             margin: 0;
             padding: 0;
-
             background: #000000;
             color: #F9F6EE;
-
-            font-family:
-                   Degular, Arial, sans-serif;
-
+            font-family: Degular, Arial, sans-serif;
             font-size: 14px;
         }
 
-
-
-
         :root {
-
             --page-padding: 2rem;
-
             --gallery-gutter: 0.5rem;
-
             --small-text: 11px;
-
             --body-text: 16px;
         }
 
-
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
 
         .site-nav {
-
             position: fixed;
-
             top: 0;
             left: 0;
-
             width: 100%;
-
-            padding:
-                    1.5rem
-                    var(--page-padding);
-
+            padding: 1.5rem var(--page-padding);
             display: grid;
-
-            grid-template-columns:
-                1fr
-                auto
-                auto
-                auto;
-
+            grid-template-columns: 1fr auto auto auto;
             column-gap: 2rem;
-
             align-items: start;
-
             z-index: 1000;
         }
 
-
         .nav-name,
         .nav-link {
-
             color: #ffffff;
-
             text-decoration: none;
-
             line-height: 1;
-
-            transition:
-                    opacity 0.25s ease;
+            transition: opacity 0.25s ease;
         }
-
 
         .nav-name {
-
             font-size: 14px;
-
             font-weight: 600;
-
-            letter-spacing:
-                    -0.01em;
+            letter-spacing: -0.01em;
         }
-
 
         .nav-link {
-
             font-size: 14px;
-
             font-weight: 400;
-
-            letter-spacing:
-                    -0.01em;
+            letter-spacing: -0.01em;
         }
-
 
         .nav-name:hover,
         .nav-link:hover {
-
             opacity: 0.5;
         }
 
+        .nav-toggle {
+            display: none;
+        }
 
-
+        /* =========================================================
+           HEADER
+        ========================================================= */
 
         .project-header {
-
-            padding:
-                    11rem
-                    var(--page-padding)
-                    7rem
-                    var(--page-padding);
+            padding: 11rem var(--page-padding) 7rem var(--page-padding);
         }
-
 
         .project-title {
-
-            margin:
-                    0 0 8rem 0;
-
-            font-size:
-                    clamp(
-                            1.5rem,
-                            2.5vw,
-                            2.5rem
-                    );
-
+            margin: 0 0 8rem 0;
+            font-size: clamp(1.5rem, 2.5vw, 2.5rem);
             font-weight: 500;
-
             line-height: 0.95;
-
-            letter-spacing:
-                    -0.04em;
+            letter-spacing: -0.04em;
         }
-
-
-
 
         .project-text {
-
             width: 100%;
-
             display: grid;
-
-            grid-template-columns:
-                1fr
-                2fr;
-
-            column-gap:
-                    2rem;
-
+            grid-template-columns: 1fr 2fr;
+            column-gap: 2rem;
             align-items: start;
-
-            margin:
-                    0 0 5rem 0;
+            margin: 0 0 5rem 0;
         }
-
 
         .text-heading {
-
             margin: 0;
-
             font-size: 11px;
-
             font-weight: 600;
-
             line-height: 1.1;
-
             text-transform: uppercase;
-
-            letter-spacing:
-                    0.02em;
+            letter-spacing: 0.02em;
         }
-
 
         .text-body {
-
             margin: 0;
-
             max-width: 720px;
-
             font-size: 16px;
-
             font-weight: 400;
-
             line-height: 1.15;
-
-            letter-spacing:
-                    -0.02em;
+            letter-spacing: -0.02em;
         }
 
-
-
+        /* =========================================================
+           GALLERY
+        ========================================================= */
 
         .gallery {
-
             width: 100%;
-
-            padding:
-                    0
-                    var(--page-padding)
-                    10rem
-                    var(--page-padding);
+            padding: 0 var(--page-padding) 10rem var(--page-padding);
         }
 
-
         .gallery-row {
-
             width: 100%;
-
             display: flex;
-
             align-items: stretch;
-
-            gap:
-                    var(--gallery-gutter);
-
-            margin:
-                    0 0
-                    var(--gallery-gutter)
-                    0;
-
+            gap: var(--gallery-gutter);
+            margin: 0 0 var(--gallery-gutter) 0;
             overflow: hidden;
         }
 
-
         .gallery-row:last-child {
-
             margin-bottom: 0;
         }
-
 
         /* =========================================================
            GALLERY ITEM
         ========================================================= */
 
         .gallery-item {
-
             position: relative;
-
             flex: 0 0 auto;
-
             min-width: 0;
-
             margin: 0;
-
             padding: 0;
-
             overflow: hidden;
-
-            background:
-                    #111111;
-
+            background: #111111;
             cursor: pointer;
+
+            /* Initial states for scroll reveal */
+            opacity: 0;
+            transform: translateY(40px);
+            transition:
+                    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
         }
 
+        /* Revealed state applied via JS */
+        .gallery-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         .gallery-item img {
-
             display: block;
-
             width: 100%;
-
             height: 100%;
-
             max-width: none;
-
             object-fit: contain;
-
             object-position: center;
-
             transition:
-                    transform
-                    0.5s
-                    cubic-bezier(
-                            0.22,
-                            1,
-                            0.36,
-                            1
-                    ),
-
-                    opacity
-                    0.3s ease;
+                    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                    opacity 0.3s ease;
         }
-
 
         .gallery-item:hover img {
-
-            transform:
-                    scale(1.015);
+            transform: scale(1.015);
         }
-
 
         /* =========================================================
            GALLERY TEXT
         ========================================================= */
 
         .gallery-text {
-
             width: 100%;
-
             display: grid;
-
-            grid-template-columns:
-                1fr
-                2fr;
-
-            column-gap:
-                    2rem;
-
+            grid-template-columns: 1fr 2fr;
+            column-gap: 2rem;
             align-items: start;
-
-            padding:
-                    6rem 0;
-
+            padding: 6rem 0;
             margin: 0;
         }
-
 
         .gallery-text-heading {
-
             margin: 0;
-
-            font-size:
-                    11px;
-
-            font-weight:
-                    600;
-
-            line-height:
-                    1.1;
-
-            text-transform:
-                    uppercase;
-
-            letter-spacing:
-                    0.02em;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
-
 
         .gallery-text-body {
-
             margin: 0;
-
-            max-width:
-                    720px;
-
-            font-size:
-                    16px;
-
-            line-height:
-                    1.15;
-
-            letter-spacing:
-                    -0.02em;
+            max-width: 720px;
+            font-size: 16px;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
         }
-
 
         /* =========================================================
            LIGHTBOX
         ========================================================= */
 
         .lightbox {
-
             position: fixed;
-
             inset: 0;
-
             width: 100%;
-
             height: 100%;
-
-            background:
-                    rgba(
-                            0,
-                            0,
-                            0,
-                            0.92
-                    );
-
+            background: rgba(0, 0, 0, 0.92);
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             padding: 4rem;
-
             opacity: 0;
-
             visibility: hidden;
-
             pointer-events: none;
-
             transition:
                     opacity 0.3s ease,
                     visibility 0.3s ease;
-
             z-index: 2000;
         }
 
-
         .lightbox.active {
-
             opacity: 1;
-
             visibility: visible;
-
             pointer-events: auto;
         }
 
-
         .lightbox img {
-
             display: block;
-
             max-width: 95vw;
-
             max-height: 90vh;
-
             width: auto;
-
             height: auto;
-
             object-fit: contain;
-
-            transform:
-                    scale(0.97);
-
-            transition:
-                    transform
-                    0.35s
-                    cubic-bezier(
-                            0.22,
-                            1,
-                            0.36,
-                            1
-                    );
+            transform: scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
-
 
         .lightbox.active img {
-
-            transform:
-                    scale(1);
+            transform: scale(1);
         }
 
-
         .lightbox-close {
-
             position: absolute;
-
             top: 2rem;
-
             right: 2rem;
-
             color: #fff;
-
             font-size: 24px;
-
             font-weight: 300;
-
             line-height: 1;
-
             cursor: pointer;
-
             user-select: none;
         }
 
-
         .lightbox-close:hover {
-
             opacity: 0.5;
         }
-
 
         /* =========================================================
            FOOTER
         ========================================================= */
 
         .site-footer {
-
-            padding:
-                    0
-                    var(--page-padding)
-                    2rem
-                    var(--page-padding);
+            padding: 0 var(--page-padding) 2rem var(--page-padding);
         }
-
 
         .footer-line {
-
             width: 100%;
-
             height: 1px;
-
-            background:
-                    rgba(
-                            249,
-                            246,
-                            238,
-                            0.35
-                    );
-
-            margin-bottom:
-                    1.5rem;
+            background: rgba(249, 246, 238, 0.35);
+            margin-bottom: 1.5rem;
         }
-
 
         .footer-grid {
-
             display: grid;
-
-            grid-template-columns:
-                1fr
-                auto
-                auto;
-
-            gap:
-                    2rem;
-
-            align-items:
-                    start;
+            grid-template-columns: 1fr auto auto;
+            gap: 2rem;
+            align-items: start;
         }
-
 
         .footer-name {
-
-            font-size:
-                    14px;
-
-            font-weight:
-                    600;
-
-            line-height:
-                    1;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1;
         }
-
 
         .footer-link {
-
-            color:
-                    #F9F6EE;
-
-            font-size:
-                    14px;
-
-            font-weight:
-                    400;
-
-            line-height:
-                    1;
-
-            text-decoration:
-                    none;
-
-            transition:
-                    opacity
-                    0.25s ease;
+            color: #F9F6EE;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1;
+            text-decoration: none;
+            transition: opacity 0.25s ease;
         }
-
 
         .footer-link:hover {
-
-            opacity:
-                    0.5;
+            opacity: 0.5;
         }
-
 
         .footer-bottom {
-
-            margin-top:
-                    5rem;
-
-            display:
-                    flex;
-
-            justify-content:
-                    space-between;
-
-            font-size:
-                    10px;
-
-            line-height:
-                    1;
-
-            opacity:
-                    0.55;
+            margin-top: 5rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            line-height: 1;
+            opacity: 0.55;
         }
-
 
         /* =========================================================
            MOBILE
@@ -628,292 +349,219 @@
         @media (max-width: 700px) {
 
             :root {
-
-                --page-padding:
-                        1rem;
-
-                --gallery-gutter:
-                        0.35rem;
+                --page-padding: 1rem;
+                --gallery-gutter: 0.35rem;
             }
-
 
             .site-nav {
-
-                position:
-                        relative;
-
-                padding:
-                        1rem;
-
-                grid-template-columns:
-                    1fr
-                    1fr;
-
-                gap:
-                        1rem;
+                position: relative;
+                top: auto;
+                left: auto;
+                width: 100%;
+                padding: 1rem;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                column-gap: 1rem;
+                row-gap: 1.25rem;
+                align-items: center;
             }
-
 
             .nav-name {
-
-                grid-column:
-                        span 2;
-
-                font-size:
-                        14px;
+                grid-column: 1;
+                font-size: 13px;
             }
 
-
-            .nav-link {
-
-                font-size:
-                        12px;
+            .nav-toggle {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                background: none;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+                justify-self: end;
             }
 
+            .nav-toggle span {
+                width: 24px;
+                height: 2px;
+                background-color: #ffffff;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            .nav-link.nav-item {
+                display: none;
+                grid-column: 1 / -1;
+                text-align: left;
+                font-size: 13px;
+                padding: 0.25rem 0;
+            }
+
+            .site-nav.active .nav-link.nav-item {
+                display: block;
+            }
+
+            .site-nav.active .nav-toggle span:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+            .site-nav.active .nav-toggle span:nth-child(2) {
+                opacity: 0;
+            }
+            .site-nav.active .nav-toggle span:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
+            }
 
             .project-header {
-
-                padding:
-                        7rem
-                        1rem
-                        4rem
-                        1rem;
+                padding: 7rem 1rem 4rem 1rem;
             }
-
 
             .project-title {
-
-                margin-bottom:
-                        5rem;
-
-                font-size:
-                        1.75rem;
+                margin-bottom: 5rem;
+                font-size: 1.75rem;
             }
-
 
             .project-text {
-
-                grid-template-columns:
-                    1fr
-                    2fr;
-
-                column-gap:
-                        0.75rem;
-
-                margin-bottom:
-                        4rem;
+                grid-template-columns: 1fr 2fr;
+                column-gap: 0.75rem;
+                margin-bottom: 4rem;
             }
-
 
             .text-heading {
-
-                font-size:
-                        9px;
+                font-size: 9px;
             }
-
 
             .text-body {
-
-                font-size:
-                        12px;
-
-                line-height:
-                        1.3;
+                font-size: 12px;
+                line-height: 1.3;
             }
-
 
             .gallery {
-
-                padding:
-                        0
-                        1rem
-                        6rem
-                        1rem;
+                padding: 0 1rem 6rem 1rem;
             }
-
 
             .gallery-row {
-
-                gap:
-                        var(--gallery-gutter);
-
-                margin-bottom:
-                        var(--gallery-gutter);
+                gap: var(--gallery-gutter);
+                margin-bottom: var(--gallery-gutter);
             }
-
 
             .gallery-text {
-
-                grid-template-columns:
-                    1fr
-                    2fr;
-
-                column-gap:
-                        0.75rem;
-
-                padding:
-                        4rem 0;
+                grid-template-columns: 1fr 2fr;
+                column-gap: 0.75rem;
+                padding: 4rem 0;
             }
-
 
             .gallery-text-heading {
-
-                font-size:
-                        9px;
+                font-size: 9px;
             }
-
 
             .gallery-text-body {
-
-                font-size:
-                        12px;
-
-                line-height:
-                        1.3;
+                font-size: 12px;
+                line-height: 1.3;
             }
-
 
             .lightbox {
-
-                padding:
-                        1rem;
+                padding: 1rem;
             }
-
 
             .lightbox img {
-
-                max-width:
-                        96vw;
-
-                max-height:
-                        85vh;
+                max-width: 96vw;
+                max-height: 85vh;
             }
-
 
             .lightbox-close {
-
-                top:
-                        1rem;
-
-                right:
-                        1rem;
-
-                font-size:
-                        20px;
+                top: 1rem;
+                right: 1rem;
+                font-size: 20px;
             }
-
 
             .site-footer {
-
-                padding:
-                        0
-                        1rem
-                        1rem
-                        1rem;
+                padding: 0 1rem 1rem 1rem;
             }
-
 
             .footer-grid {
-
-                grid-template-columns:
-                    1fr
-                    1fr;
-
-                gap:
-                        1rem;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
             }
-
 
             .footer-name {
-
-                grid-column:
-                        span 2;
+                grid-column: span 2;
+                font-size: 13px;
             }
-
 
             .footer-link {
-
-                font-size:
-                        12px;
+                font-size: 11px;
             }
 
+            .footer-link:last-child {
+                text-align: right;
+            }
 
             .footer-bottom {
-
-                margin-top:
-                        4rem;
-
-                display:
-                        block;
-
-                line-height:
-                        1.5;
+                margin-top: 4rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                font-size: 9px;
+                line-height: 1.5;
             }
-
         }
 
+        @media (max-width: 390px) {
+            :root {
+                --page-padding: 0.85rem;
+                --gallery-gutter: 0.4rem;
+            }
+
+            .site-nav {
+                padding: 0.85rem;
+            }
+
+            .nav-name {
+                font-size: 12px;
+            }
+
+            .nav-link {
+                font-size: 10px;
+            }
+
+            .project-title {
+                font-size: 1.5rem;
+            }
+        }
 
         @media (prefers-reduced-motion: reduce) {
-
             *,
             *::before,
             *::after {
-
-                animation-duration:
-                        0.01ms !important;
-
-                animation-iteration-count:
-                        1 !important;
-
-                transition-duration:
-                        0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
-
         }
 
     </style>
 
 </head>
 
-
 <body>
-
 
 <nav class="site-nav">
 
-    <a
-            href="index.html"
-            class="nav-name"
-    >
-        DEVON BA DOUR
-    </a>
+    <a href="index.html" class="nav-name">DEVON BA DOUR</a>
 
+    <button class="nav-toggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-    <a
-            href="index.html"
-            class="nav-link"
-    >
-        WORK
-    </a>
+    <a href="index.html" class="nav-link nav-item">WORK</a>
 
+    <a href="resume.html" class="nav-link nav-item">RESUME</a>
 
-    <a
-            href="resume.html"
-            class="nav-link"
-    >
-        RESUME
-    </a>
-
-
-    <a
-            href="reach-out.html"
-            class="nav-link"
-    >
-        REACH OUT!
-    </a>
+    <a href="reach-out.html" class="nav-link nav-item">REACH OUT!</a>
 
 </nav>
-
 
 <header class="project-header">
 
@@ -921,45 +569,29 @@
         MURKY WATER
     </h1>
 
-
     <section class="project-text">
-
         <h2 class="text-heading">
             PROJECT BRIEF
         </h2>
-
-
         <p class="text-body">
-
             Conceptualize and design a business with
             consistent branding, products, and signage.
-
         </p>
-
     </section>
 
-
     <section class="project-text">
-
         <h2 class="text-heading">
             STRATEGY
         </h2>
-
-
         <p class="text-body">
-
             Murky Water takes a local and obscurist
             approach to cafe branding, combining
             unique hand-drawn imagery with geometric
             patterns to create a distinctive brand.
-
         </p>
-
     </section>
 
 </header>
-
-
 
 <main class="gallery">
 
@@ -969,25 +601,20 @@
                 class="gallery-item"
                 data-image="images/murkywater1.png"
         >
-
             <img
                     src="images/murkywater1.png"
                     alt="Murky Water project image 1"
             >
-
         </figure>
-
 
         <figure
                 class="gallery-item"
                 data-image="images/murky2.png"
         >
-
             <img
                     src="images/murky2.png"
                     alt="Murky Water project image 2"
             >
-
         </figure>
 
     </div>
@@ -998,63 +625,46 @@
                 class="gallery-item"
                 data-image="images/murky3.png"
         >
-
             <img
                     src="images/murky3.png"
                     alt="Murky Water project image 3"
             >
-
         </figure>
-
 
         <figure
                 class="gallery-item"
                 data-image="images/murky4.png"
         >
-
             <img
                     src="images/murky4.png"
                     alt="Murky Water project image 4"
             >
-
         </figure>
-
 
         <figure
                 class="gallery-item"
                 data-image="images/murky10.png"
         >
-
             <img
                     src="images/murky10.png"
                     alt="Murky Water project image 10"
             >
-
         </figure>
 
     </div>
 
-
     <section class="gallery-text">
-
         <h2 class="gallery-text-heading">
             IDENTITY
         </h2>
-
-
         <p class="gallery-text-body">
-
             The visual identity combines a restrained
             modernist structure with expressive,
             hand-drawn elements. The system creates a
             balance between repetition, texture and
             unexpected visual moments.
-
         </p>
-
     </section>
-
-
 
     <div class="gallery-row">
 
@@ -1062,29 +672,23 @@
                 class="gallery-item"
                 data-image="images/murky6.png"
         >
-
             <img
                     src="images/murky6.png"
                     alt="Murky Water project image 6"
             >
-
         </figure>
-
 
         <figure
                 class="gallery-item"
                 data-image="images/murky7.png"
         >
-
             <img
                     src="images/murky7.png"
                     alt="Murky Water project image 7"
             >
-
         </figure>
 
     </div>
-
 
     <div class="gallery-row">
 
@@ -1092,50 +696,34 @@
                 class="gallery-item"
                 data-image="images/murky8.png"
         >
-
             <img
                     src="images/murky8.png"
                     alt="Murky Water project image 8"
             >
-
         </figure>
-
 
         <figure
                 class="gallery-item"
                 data-image="images/murky9.png"
         >
-
             <img
                     src="images/murky9.png"
                     alt="Murky Water project image 9"
             >
-
         </figure>
 
     </div>
 
-
-
-
-
     <section class="gallery-text">
-
         <h2 class="gallery-text-heading">
             THE STORE LOCATION
         </h2>
-
-
         <p class="gallery-text-body">
-
             In the conception stage of the branding, Murky Water was idealized as an independent,
             local cafe in an urban setting. Somewhere to get late night work done, spend time with your friends,
             or simply relax.
-
         </p>
-
     </section>
-
 
     <div class="gallery-row">
 
@@ -1143,16 +731,13 @@
                 class="gallery-item"
                 data-image="images/murky5.png"
         >
-
             <img
                     src="images/murky5.png"
                     alt="Murky Water project image 5"
             >
-
         </figure>
 
     </div>
-
 
 </main>
 
@@ -1161,7 +746,6 @@
         class="lightbox"
         id="lightbox"
 >
-
     <div
             class="lightbox-close"
             id="lightboxClose"
@@ -1169,30 +753,21 @@
         ×
     </div>
 
-
     <img
             id="lightboxImage"
             src=""
             alt=""
     >
-
 </div>
-
-
-
-
 
 <footer class="site-footer">
 
     <div class="footer-line"></div>
 
-
     <div class="footer-grid">
-
         <div class="footer-name">
             DEVON BA DOUR
         </div>
-
 
         <a
                 href="resume.html"
@@ -1201,347 +776,159 @@
             RESUME
         </a>
 
-
         <a
                 href="reach-out.html"
                 class="footer-link"
         >
             REACH OUT!
         </a>
-
     </div>
 
-
     <div class="footer-bottom">
-
         <span>
             © 2026 Devon Ba Dour
         </span>
-
-
         <span>
             Minneapolis, MN
         </span>
-
     </div>
 
 </footer>
 
-
-
-
-
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const siteNav = document.querySelector('.site-nav');
+        const navToggle = document.querySelector('.nav-toggle');
 
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                siteNav.classList.toggle('active');
+            });
+        }
 
+        const galleryItemsObserver = document.querySelectorAll('.gallery-item');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const galleryRows =
-        document.querySelectorAll(
-            ".gallery-row"
-        );
+        if (prefersReducedMotion) {
+            galleryItemsObserver.forEach(item => item.classList.add('is-visible'));
+        } else {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
+            };
 
+            const itemObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            galleryItemsObserver.forEach(item => {
+                itemObserver.observe(item);
+            });
+        }
+    });
+
+    const galleryRows = document.querySelectorAll(".gallery-row");
 
     function buildGallery() {
-
         galleryRows.forEach(row => {
-
-            const items =
-                Array.from(
-                    row.querySelectorAll(
-                        ".gallery-item"
-                    )
-                );
-
+            const items = Array.from(row.querySelectorAll(".gallery-item"));
 
             if (!items.length) {
                 return;
             }
 
-
-            const images =
-                items.map(
-                    item =>
-                        item.querySelector("img")
-                );
-
+            const images = items.map(item => item.querySelector("img"));
 
             function calculate() {
+                const rowWidth = row.clientWidth;
+                const gap = parseFloat(getComputedStyle(row).gap) || 0;
 
-                const rowWidth =
-                    row.clientWidth;
+                // Fixed math calculation here
+                const totalGap = gap * (images.length - 1);
 
+                const ratios = images.map(image => {
+                    if (image.naturalWidth && image.naturalHeight) {
+                        return (image.naturalWidth / image.naturalHeight);
+                    }
+                    return 1;
+                });
 
-                const gap =
-                    parseFloat(
-                        getComputedStyle(row).gap
-                    ) || 0;
+                const totalRatio = ratios.reduce((total, ratio) => total + ratio, 0);
 
-
-                const totalGap =
-                    gap *
-                    (images.length - 1);
-
-
-                const ratios =
-                    images.map(image => {
-
-                        if (
-                            image.naturalWidth &&
-                            image.naturalHeight
-                        ) {
-
-                            return (
-                                image.naturalWidth /
-                                image.naturalHeight
-                            );
-
-                        }
-
-                        return 1;
-
-                    });
-
-
-                const totalRatio =
-                    ratios.reduce(
-                        (
-                            total,
-                            ratio
-                        ) =>
-                            total + ratio,
-                        0
-                    );
-
-
-                if (
-                    !rowWidth ||
-                    !totalRatio
-                ) {
-
+                if (!rowWidth || !totalRatio) {
                     return;
                 }
 
+                const rowHeight = (rowWidth - totalGap) / totalRatio;
 
-                const rowHeight =
-                    (
-                        rowWidth -
-                        totalGap
-                    ) /
-                    totalRatio;
-
-
-                items.forEach(
-                    (
-                        item,
-                        index
-                    ) => {
-
-                        const width =
-                            rowHeight *
-                            ratios[index];
-
-
-                        item.style.width =
-                            `${width}px`;
-
-
-                        item.style.height =
-                            `${rowHeight}px`;
-
-                    }
-                );
-
+                items.forEach((item, index) => {
+                    const width = rowHeight * ratios[index];
+                    item.style.width = `${width}px`;
+                    item.style.height = `${rowHeight}px`;
+                });
             }
 
-
-            /*
-               Calculate immediately if the image
-               is already loaded.
-            */
-
             images.forEach(image => {
-
-                if (
-                    image.complete &&
-                    image.naturalWidth > 0
-                ) {
-
+                if (image.complete && image.naturalWidth > 0) {
                     calculate();
-
                 } else {
-
-                    image.addEventListener(
-                        "load",
-                        calculate
-                    );
-
+                    image.addEventListener("load", calculate);
                 }
-
             });
-
         });
-
     }
-
 
     buildGallery();
 
-
-
-
     let resizeTimer;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(buildGallery, 100);
+    });
 
+    const galleryItems = document.querySelectorAll(".gallery-item");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+    const lightboxClose = document.getElementById("lightboxClose");
 
-    window.addEventListener(
-        "resize",
-        () => {
-
-            clearTimeout(
-                resizeTimer
-            );
-
-
-            resizeTimer =
-                setTimeout(
-                    buildGallery,
-                    100
-                );
-
-        }
-    );
-
-
-
-
-
-    const galleryItems =
-        document.querySelectorAll(
-            ".gallery-item"
-        );
-
-
-    const lightbox =
-        document.getElementById(
-            "lightbox"
-        );
-
-
-    const lightboxImage =
-        document.getElementById(
-            "lightboxImage"
-        );
-
-
-    const lightboxClose =
-        document.getElementById(
-            "lightboxClose"
-        );
-
-
-    galleryItems.forEach(
-        item => {
-
-            item.addEventListener(
-                "click",
-                () => {
-
-                    const image =
-                        item.getAttribute(
-                            "data-image"
-                        );
-
-
-                    const thumbnail =
-                        item.querySelector(
-                            "img"
-                        );
-
-
-                    lightboxImage.src =
-                        image;
-
-
-                    lightboxImage.alt =
-                        thumbnail
-                            ? thumbnail.alt
-                            : "Murky Water project image";
-
-
-                    lightbox.classList.add(
-                        "active"
-                    );
-
-
-                    document.body.style.overflow =
-                        "hidden";
-
-                }
-            );
-
-        }
-    );
-
-
-
+    galleryItems.forEach(item => {
+        item.addEventListener("click", () => {
+            const image = item.getAttribute("data-image");
+            const thumbnail = item.querySelector("img");
+            lightboxImage.src = image;
+            lightboxImage.alt = thumbnail ? thumbnail.alt : "Murky Water project image";
+            lightbox.classList.add("active");
+            document.body.style.overflow = "hidden";
+        });
+    });
 
     function closeLightbox() {
-
-        lightbox.classList.remove(
-            "active"
-        );
-
-
-        document.body.style.overflow =
-            "";
-
-
-        lightboxImage.src =
-            "";
-
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "";
+        lightboxImage.src = "";
     }
 
+    lightboxClose.addEventListener("click", closeLightbox);
 
-    lightboxClose.addEventListener(
-        "click",
-        closeLightbox
-    );
-
-
-    lightbox.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target ===
-                lightbox
-            ) {
-
-                closeLightbox();
-
-            }
-
+    lightbox.addEventListener("click", event => {
+        if (event.target === lightbox) {
+            closeLightbox();
         }
-    );
+    });
 
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key ===
-                "Escape"
-            ) {
-
-                closeLightbox();
-
-            }
-
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeLightbox();
         }
-    );
+    });
 
 </script>
-
 
 </body>
 

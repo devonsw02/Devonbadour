@@ -73,6 +73,10 @@
             opacity: 0.5;
         }
 
+        .nav-toggle {
+            display: none;
+        }
+
         .project-header {
             padding: 11rem var(--page-padding) 7rem var(--page-padding);
         }
@@ -126,8 +130,6 @@
             padding: 0 var(--page-padding) 5rem var(--page-padding);
         }
 
-
-
         .gallery-row {
             width: 100%;
             display: flex;
@@ -146,6 +148,18 @@
             overflow: hidden;
             background: #111111;
             cursor: pointer;
+
+            opacity: 0;
+            transform: translateY(40px);
+            transition:
+                    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity, transform;
+        }
+
+        .gallery-item.is-revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .gallery-item img {
@@ -282,17 +296,60 @@
 
             .site-nav {
                 position: relative;
+                top: auto;
+                left: auto;
+                width: 100%;
                 padding: 1rem;
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                column-gap: 1rem;
+                row-gap: 1.25rem;
+                align-items: center;
             }
 
             .nav-name {
-                grid-column: span 2;
+                grid-column: 1;
+                font-size: 13px;
             }
 
-            .nav-link {
-                font-size: 12px;
+            .nav-toggle {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                background: none;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+                justify-self: end;
+            }
+
+            .nav-toggle span {
+                width: 24px;
+                height: 2px;
+                background-color: #ffffff;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            .nav-link.nav-item {
+                display: none;
+                grid-column: 1 / -1;
+                text-align: left;
+                font-size: 13px;
+                padding: 0.25rem 0;
+            }
+
+            .site-nav.active .nav-link.nav-item {
+                display: block;
+            }
+
+            .site-nav.active .nav-toggle span:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+            .site-nav.active .nav-toggle span:nth-child(2) {
+                opacity: 0;
+            }
+            .site-nav.active .nav-toggle span:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
             }
 
             .project-header {
@@ -378,6 +435,28 @@
             }
         }
 
+        @media (max-width: 390px) {
+            :root {
+                --page-padding: 0.85rem;
+                --gallery-gutter: 0.4rem;
+            }
+
+            .site-nav {
+                padding: 0.85rem;
+            }
+
+            .nav-name {
+                font-size: 12px;
+            }
+
+            .nav-link {
+                font-size: 10px;
+            }
+
+            .project-title {
+                font-size: 1.5rem;
+            }
+        }
 
         @media (prefers-reduced-motion: reduce) {
             *,
@@ -386,6 +465,12 @@
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
+            }
+
+            .gallery-item {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
             }
         }
     </style>
@@ -399,15 +484,21 @@
         DEVON BA DOUR
     </a>
 
-    <a href="index.html" class="nav-link">
+    <button class="nav-toggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <a href="index.html" class="nav-link nav-item">
         WORK
     </a>
 
-    <a href="resume.html" class="nav-link">
+    <a href="resume.html" class="nav-link nav-item">
         RESUME
     </a>
 
-    <a href="reach-out.html" class="nav-link">
+    <a href="reach-out.html" class="nav-link nav-item">
         REACH OUT!
     </a>
 
@@ -461,11 +552,11 @@
     <div class="gallery-row">
 
         <figure class="gallery-item" data-image="images/mndot1.png">
-            <img src="images/mndot1.jpg" alt="MNDOT 1">
+            <img src="images/mndot1.png" alt="MNDOT 1">
         </figure>
 
         <figure class="gallery-item" data-image="images/mndot2.png">
-            <img src="images/mndot2.jpg" alt="MNDOT 2">
+            <img src="images/mndot2.png" alt="MNDOT 2">
         </figure>
 
     </div>
@@ -536,7 +627,7 @@
         </h2>
 
         <p class="gallery-text-body">
-     The question cards were created in mind with easy access for teachers with limited supplies, as well as easy readability for students.
+            The question cards were created in mind with easy access for teachers with limited supplies, as well as easy readability for students.
             They were designed to work both in color and black and white printing based on access to classroom resources, and kept simple to highlight larger text and simple patterns.
             The backside pattern took inspiration from the MNDot brand styleguide, and the front side to highlight the established characters from the MNDot brand.
         </p>
@@ -598,6 +689,14 @@
 </footer>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const siteNav = document.querySelector('.site-nav');
+        const navToggle = document.querySelector('.nav-toggle');
+
+        navToggle.addEventListener('click', () => {
+            siteNav.classList.toggle('active');
+        });
+    });
 
     const galleryRows = document.querySelectorAll(".gallery-row");
 
@@ -632,8 +731,7 @@
                 const gap =
                     parseFloat(getComputedStyle(row).gap) || 0;
 
-                const totalGap =
-                    gap * (media.length - 1);
+                const totalGap = gap * (media.length - 1);
 
                 const ratios =
                     media.map(getMediaRatio);
@@ -648,13 +746,11 @@
                     return;
                 }
 
-                const rowHeight =
-                    (rowWidth - totalGap) / totalRatio;
+                const rowHeight = (rowWidth - totalGap) / totalRatio;
 
                 items.forEach((item, index) => {
 
-                    const width =
-                        rowHeight * ratios[index];
+                    const width = rowHeight * ratios[index];
 
                     item.style.width = `${width}px`;
                     item.style.height = `${rowHeight}px`;
@@ -783,6 +879,27 @@
 
         }
     );
+
+    const revealOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.15
+    };
+
+    const revealCallback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    };
+
+    const revealObserver = new IntersectionObserver(revealCallback, revealOptions);
+
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        revealObserver.observe(item);
+    });
 
 </script>
 
