@@ -854,7 +854,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Nav Toggle Logic
+
         const siteNav = document.querySelector('.site-nav');
         const navToggle = document.querySelector('.nav-toggle');
 
@@ -862,21 +862,19 @@
             siteNav.classList.toggle('active');
         });
 
-        // Scroll Reveal Animation Logic
+
         const projects = document.querySelectorAll('.project');
 
-        // Check for user's reduced motion preference to act accordingly in JS as well
+
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (prefersReducedMotion) {
-            // If reduced motion is preferred, reveal all immediately
             projects.forEach(project => project.classList.add('is-visible'));
         } else {
-            // Setup Intersection Observer for smooth reveal
             const observerOptions = {
                 root: null,
-                rootMargin: '0px 0px -10% 0px', // Triggers when element is 10% from bottom of viewport
-                threshold: 0.1 // Triggers when 10% of the item is visible
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
             };
 
             const projectObserver = new IntersectionObserver((entries, observer) => {
